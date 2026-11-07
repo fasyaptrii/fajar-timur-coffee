@@ -44,6 +44,7 @@ app.post('/api/login',loginLimit,wrap(async(q,s)=>{
 app.post('/api/logout',wrap(async(q,s)=>{const t=cookie(q.headers.cookie,'ft_sid');if(t)await Q('DELETE FROM sessions WHERE token_hash=?',[sha(t)]);s.setHeader('Set-Cookie','ft_sid=; HttpOnly; Path=/; Max-Age=0');s.json({ok:1})}));
 app.get('/api/me',auth(),(q,s)=>s.json(q.user));
 ['owner','admin','kasir'].forEach(r=>app.get('/'+r,async(q,s)=>{const u=await userFrom(q.headers.cookie).catch(()=>null);if(!u)return s.redirect('/login.html');if(u.role!==r)return s.redirect('/'+u.role);s.sendFile(path.join(__dirname,'views','dashboard.html'))}));
+  app.get('/login',(q,s)=>s.redirect('/login.html'));
 
 /* ---------- pelanggan (tanpa login) ---------- */
 app.get('/api/menu',wrap(async(q,s)=>{
